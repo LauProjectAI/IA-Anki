@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>IA-Anki – Les Bases de l'Intelligence Artificielle en 15 Jours</title>
+  <meta name="description" content="Apprenez les mécanismes réels de l'Intelligence Artificielle en 15 jours grâce à la vulgarisation intuitive et la répétition espacée Anki." />
+
+  <!-- Compatibilité iPad Plein Écran -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="IA-Anki" />
+
+  <!-- Google Fonts : Space Grotesk & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app-container">
+    <!-- EN-TÊTE PRINCIPAL -->
+    <header class="app-header">
+      <div class="brand-section">
+        <div class="brand-logo" style="color:var(--accent-cyan); border-color:var(--accent-cyan);">🤖</div>
+        <div>
+          <div class="brand-title">IA-Anki</div>
+          <div class="brand-subtitle">Comprendre l'IA en 15 Jours</div>
+        </div>
+      </div>
+
+      <div class="header-stats">
+        <div class="stat-chip amber-chip" title="Points d'expérience XP">
+          <span>⚡</span>
+          <span id="header-xp-val" class="tabular-num">0</span>
+          <span>XP</span>
+        </div>
+        <div class="stat-chip cyan-chip" title="Niveau">
+          <span id="header-level-val" class="tabular-num">Niv. 1</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="btn-toggle-sound" class="icon-btn" title="Couper ou activer le son" aria-label="Son">🔊</button>
+        <button id="btn-open-settings" class="icon-btn" title="Paramètres" aria-label="Paramètres">⚙️</button>
+      </div>
+    </header>
+
+    <!-- BARRE D'ONGLETS -->
+    <nav class="app-nav">
+      <button class="nav-tab active" id="tab-collection" data-view="collection">🗂️ Collection (SRS)</button>
+      <button class="nav-tab" id="tab-playground" data-view="playground">🧪 Atelier Interactif</button>
+      <button class="nav-tab" id="tab-fiches" data-view="fiches">📚 Programme 15 Jours</button>
+      <button class="nav-tab" id="tab-sprint" data-view="sprint">⚡ Sprint IA (60s)</button>
+    </nav>
+
+    <!-- ====================================================================
+         VUE 1 : COLLECTION ANKI (ACCUEIL)
+         ==================================================================== -->
+    <main id="view-collection" class="view-section active">
+      <section class="collection-hero">
+        <div class="ring-container">
+          <svg class="ring-svg" viewBox="0 0 90 90">
+            <circle class="ring-bg" cx="45" cy="45" r="38" />
+            <circle id="ring-progress-svg" class="ring-progress" cx="45" cy="45" r="38" />
+          </svg>
+          <div class="ring-center-text">
+            <div id="ring-count-display" class="ring-count tabular-num">0/20</div>
+            <div class="ring-label">Cartes</div>
+          </div>
+        </div>
+
+        <div class="hero-text">
+          <h2>Prêt pour votre session d'IA quotidienne ?</h2>
+          <p>Une session courte de 3 à 5 minutes par jour suffit pour maîtriser les fondations de l'IA (Machine Learning, Réseaux de neurones, LLM, Transformers).</p>
+        </div>
+
+        <div class="hero-actions">
+          <button id="btn-start-revision" class="btn-primary">
+            <span>▶</span> Lancer la révision
+          </button>
+          <button id="btn-start-sprint" class="btn-secondary">
+            <span>⚡</span> Défi Sprint (60s)
+          </button>
+        </div>
+      </section>
+
+      <!-- SÉRIE DE DISCIPLINE (CALENDRIER 30 JOURS) -->
+      <section class="streak-card">
+        <div class="streak-header">
+          <div class="streak-info-title">
+            <span>📅</span>
+            <span>Régularité des 30 derniers jours</span>
+          </div>
+          <span class="grace-badge">1 jour de tolérance / semaine</span>
+        </div>
+        <div id="calendar-30d-container" class="calendar-30d-grid"></div>
+      </section>
+
+      <!-- GRILLE DES NOTIONS D'IA -->
+      <section class="collection-section">
+        <div class="section-header">
+          <h3>
+            <span>🧠</span>
+            <span>Collection des Notions d'IA (15 Jours)</span>
+          </h3>
+          <div class="legend-pills">
+            <span class="legend-item"><span class="legend-dot dot-new"></span> Neuve</span>
+            <span class="legend-item"><span class="legend-dot dot-learning"></span> Apprentissage</span>
+            <span class="legend-item"><span class="legend-dot dot-young"></span> Jeune</span>
+            <span class="legend-item"><span class="legend-dot dot-gold"></span> Mûre (>21j)</span>
+          </div>
+        </div>
+        <div id="collection-grid-container" class="collection-grid"></div>
+      </section>
+    </main>
+
+    <!-- ====================================================================
+         VUE 2 : ATELIER INTERACTIF (PLAYGROUND IA)
+         ==================================================================== -->
+    <section id="view-playground" class="view-section">
+      <div class="playground-grid">
+        <!-- 1. SIMULATEUR DE PRÉDICTION DE TOKEN -->
+        <div class="playground-card">
+          <div class="section-header">
+            <h3>
+              <span>💬</span>
+              <span>1. Comment un LLM prédit le mot suivant (Token)</span>
+            </h3>
+            <span style="font-size:0.75rem; color:var(--accent-cyan); font-weight:700;">ChatGPT / Gemini</span>
+          </div>
+          <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:14px;">
+            Tapez un début de phrase ou modifiez le texte : l'IA calcule la probabilité statistique de chaque mot suivant possible.
+          </p>
+
+          <div style="margin-bottom:12px;">
+            <label style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Début de phrase :</label>
+            <input type="text" id="token-input-field" class="written-input" style="width:100%; margin-top:4px;" />
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; background:var(--bg-slate-input); padding:10px 14px; border-radius:8px;">
+            <div>
+              <span style="font-size:0.85rem; font-weight:600;">Température : <strong id="token-temp-value" class="tabular-num">0.7</strong></span>
+              <div style="font-size:0.72rem; color:var(--text-muted)">Basse = logique et prévisible • Haute = créatif et varié</div>
+            </div>
+            <input type="range" id="token-temp-slider" min="0.1" max="1.5" step="0.1" value="0.7" style="accent-color:var(--accent-amber); cursor:pointer;" />
+          </div>
+
+          <div style="font-size:0.78rem; font-weight:700; color:var(--text-secondary); margin-bottom:8px;">
+            Candidats suivants les plus probables (cliquez pour ajouter) :
+          </div>
+          <div id="token-candidates-list"></div>
+        </div>
+
+        <!-- 2. VISUALISEUR DE RÉSEAU DE NEURONES -->
+        <div class="playground-card">
+          <div class="section-header">
+            <h3>
+              <span>⚡</span>
+              <span>2. Dans le cerveau d'un Réseau de Neurones</span>
+            </h3>
+            <button id="btn-pulse-neuron" class="btn-secondary" style="font-size:0.75rem; padding:6px 12px;">
+              🔄 Simuler une entrée
+            </button>
+          </div>
+          <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:10px;">
+            Les signaux traversent les couches de calculs pondérés pour aboutir à une prédiction finale (ex: classification Chat vs Chien).
+          </p>
+          <div class="canvas-ia-wrapper">
+            <canvas id="neural-net-canvas"></canvas>
+          </div>
+        </div>
+
+        <!-- 3. CARTE GÉOMÉTRIQUE DES EMBEDDINGS 2D -->
+        <div class="playground-card">
+          <div class="section-header">
+            <h3>
+              <span>📍</span>
+              <span>3. Les Embeddings : La géométrie du sens</span>
+            </h3>
+            <span id="embedding-similarity-val" class="tabular-num" style="font-size:0.95rem; font-weight:800; color:var(--state-success)">88 %</span>
+          </div>
+          <p id="embedding-similarity-desc" style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:10px;">
+            Dans l'espace des embeddings, les mots de sens proche se regroupent naturellement par paquets géométriques.
+          </p>
+          <div class="canvas-ia-wrapper">
+            <canvas id="embedding-space-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VUE 3 : SESSION ANKI (SRS)
+         ==================================================================== -->
+    <section id="view-session" class="view-section">
+      <div class="session-container">
+        <div class="session-top-bar">
+          <div class="session-progress-info">
+            <span>Carte</span>
+            <strong id="session-card-counter" class="tabular-num">1 / 10</strong>
+          </div>
+
+          <div id="session-combo-badge" class="session-combo-badge">
+            <span style="font-size:0.85rem">COMBO</span>
+            <span id="session-combo-val" class="combo-num tabular-num">0</span>
+            <span id="session-combo-mult" style="font-size:0.78rem; font-weight:700;">x1.0</span>
+          </div>
+        </div>
+
+        <div id="card-stage" class="card-stage">
+          <div id="flashcard-wrapper" class="flashcard-wrapper">
+            <!-- RECTO -->
+            <div class="card-face card-face-front">
+              <div class="card-header-bar">
+                <span id="card-module-tag" class="card-module-tag">Module IA</span>
+                <span id="card-badge-format" class="card-badge-format">QCM</span>
+              </div>
+
+              <div class="card-body-content">
+                <div id="card-question-text" class="card-question-text">Question IA...</div>
+                <div id="card-interaction-zone" style="width:100%; margin-top:14px;"></div>
+              </div>
+            </div>
+
+            <!-- VERSO -->
+            <div class="card-face card-face-back">
+              <div class="card-header-bar">
+                <span class="card-module-tag">Définition & Explication</span>
+                <span class="card-badge-format">Correction</span>
+              </div>
+
+              <div class="card-body-content">
+                <div id="card-term-display" class="card-term-display">Terme IA</div>
+                <div id="card-definition-box" class="card-definition-box">Définition...</div>
+                <div id="card-example-box" class="card-example-box">Exemple concret...</div>
+                <div id="card-diff-container" class="diff-container"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="session-footer-controls">
+          <button id="btn-show-answer" class="btn-flip-card">
+            <span>Afficher la réponse (Espace)</span>
+          </button>
+
+          <div id="review-controls-bar" class="review-controls-bar" style="display:none;">
+            <button id="btn-srs-encore" class="srs-btn srs-btn-encore" title="Touche 1">
+              <span class="srs-btn-name">Encore</span>
+              <span id="srs-interval-encore" class="srs-btn-interval tabular-num">1 min</span>
+              <span class="srs-btn-key">1</span>
+            </button>
+            <button id="btn-srs-difficile" class="srs-btn srs-btn-difficile" title="Touche 2">
+              <span class="srs-btn-name">Difficile</span>
+              <span id="srs-interval-difficile" class="srs-btn-interval tabular-num">5 min</span>
+              <span class="srs-btn-key">2</span>
+            </button>
+            <button id="btn-srs-correct" class="srs-btn srs-btn-correct" title="Touche 3">
+              <span class="srs-btn-name">Correct</span>
+              <span id="srs-interval-correct" class="srs-btn-interval tabular-num">10 min</span>
+              <span class="srs-btn-key">3</span>
+            </button>
+            <button id="btn-srs-facile" class="srs-btn srs-btn-facile" title="Touche 4">
+              <span class="srs-btn-name">Facile</span>
+              <span id="srs-interval-facile" class="srs-btn-interval tabular-num">4 j</span>
+              <span class="srs-btn-key">4</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VUE 4 : FIN DE SESSION
+         ==================================================================== -->
+    <section id="view-summary" class="view-section">
+      <div class="summary-card">
+        <div class="summary-badge-top">🏆</div>
+        <h2 class="summary-title">Session IA Validée !</h2>
+        <p class="summary-subtitle">Votre compréhension des fondations de l'IA progresse chaque jour.</p>
+
+        <div class="summary-stats-grid">
+          <div class="summary-stat-box">
+            <div id="sum-cards-seen" class="summary-stat-value tabular-num">0</div>
+            <div class="summary-stat-label">Cartes Vues</div>
+          </div>
+          <div class="summary-stat-box">
+            <div id="sum-success-rate" class="summary-stat-value tabular-num">0%</div>
+            <div class="summary-stat-label">Taux de Réussite</div>
+          </div>
+          <div class="summary-stat-box">
+            <div id="sum-points-gained" class="summary-stat-value tabular-num">0</div>
+            <div class="summary-stat-label">Points XP Gagnés</div>
+          </div>
+          <div class="summary-stat-box">
+            <div id="sum-longest-combo" class="summary-stat-value tabular-num">0</div>
+            <div class="summary-stat-label">Plus Long Combo</div>
+          </div>
+        </div>
+
+        <div class="new-acquired-section">
+          <div class="new-acquired-title">🎉 Notions d'IA consolidées dans votre mémoire :</div>
+          <div id="sum-new-acquired-pills" class="new-acquired-pills"></div>
+        </div>
+
+        <button id="btn-summary-home" class="btn-primary" style="width:100%;">
+          Retour à la collection
+        </button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VUE 5 : PROGRAMME 15 JOURS (FICHES PÉDAGOGIQUES)
+         ==================================================================== -->
+    <section id="view-fiches" class="view-section">
+      <div class="section-header">
+        <h3>
+          <span>📖</span>
+          <span>Le Programme des 15 Jours d'Initiation à l'IA</span>
+        </h3>
+        <span style="font-size:0.75rem; color:var(--text-muted)">Cliquez sur un jour pour ouvrir</span>
+      </div>
+      <div id="fiches-accordion-container" class="fiches-accordion"></div>
+    </section>
+
+    <!-- ====================================================================
+         VUE 6 : SPRINT IA (60 SECONDES)
+         ==================================================================== -->
+    <section id="view-sprint" class="view-section">
+      <div class="sprint-container">
+        <div class="sprint-top-hud">
+          <div class="sprint-timer-box">
+            <span>⏱️</span>
+            <div id="sprint-timer-val" class="sprint-timer-val tabular-num">60s</div>
+          </div>
+          <div class="sprint-score-box">
+            <div id="sprint-score-val" class="sprint-score-val tabular-num">0</div>
+            <div class="sprint-score-label">Score (Record : <span id="sprint-high-score" class="tabular-num">0</span>)</div>
+          </div>
+        </div>
+
+        <div style="background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.25); border-radius:12px; padding:10px 14px; font-size:0.8rem; color:#7DD3FC; margin-bottom:18px; text-align:left;">
+          ⚡ <strong>Règle d'or :</strong> Le mode sprint ne modifie jamais vos intervalles Anki. Il teste votre rapidité de reconnaissance des concepts de l'IA !
+        </div>
+
+        <div class="summary-card" style="margin-top:0;">
+          <div id="sprint-question-text" class="card-question-text" style="min-height:60px;">Question sprint...</div>
+          <div id="sprint-options-grid" class="mcq-options-grid" style="margin-top:16px;"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- OVERLAY NIVEAU SUPÉRIEUR -->
+  <div id="level-up-modal">
+    <div style="font-size:4rem;">🌟</div>
+    <div id="level-up-num-display" class="level-up-num tabular-num">2</div>
+    <div style="font-family:var(--font-heading); font-size:1.5rem; text-transform:uppercase; letter-spacing:0.15em;">NIVEAU SUPÉRIEUR !</div>
+  </div>
+
+  <!-- MODAL PARAMÈTRES -->
+  <div id="settings-modal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="font-heading">Paramètres IA-Anki</h3>
+        <button id="btn-close-settings" class="icon-btn">✕</button>
+      </div>
+      <div style="margin-bottom:20px;">
+        <div style="font-size:0.95rem; font-weight:700; margin-bottom:6px;">Objectif de cartes par jour</div>
+        <input type="number" id="setting-daily-goal" min="5" max="100" step="5" class="written-input" value="20" style="max-width:120px;" />
+      </div>
+      <div>
+        <button id="btn-full-reset" class="btn-danger-outline" style="width:100%;">
+          Réinitialiser la progression IA
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="vocabulaire.js"></script>
+  <script src="srs-engine.js"></script>
+  <script src="audio.js"></script>
+  <script src="playground.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
